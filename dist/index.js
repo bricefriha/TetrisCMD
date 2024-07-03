@@ -1,5 +1,5 @@
 const alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-let position = "A:0";
+let positions = ["A:0"];
 // Draw the board
 //
 // Refresh
@@ -7,25 +7,34 @@ setInterval(() => placePiece(true), 1000);
 function placePiece(isRefreshing = false) {
     console.clear();
     console.log('\u001Bc\u001B[3J');
-    const pos = position.split(':');
     if (isRefreshing)
-        //pos[1] = `${Number(pos[1]) + 1}`;
-        pos[0] = alpha[alpha.indexOf(pos[0]) + 1];
-    const y = pos[0];
-    const x = pos[1];
+        for (let posX = 0; posX < positions.length; ++posX) {
+            const position = positions[posX];
+            const pos = position.split(':');
+            pos[0] = alpha[alpha.indexOf(pos[0]) + 1];
+            positions[posX] = `${pos[0]}:${pos[1]}`;
+        }
     // Draw the rows
     for (let iy = 0; iy < 16; ++iy) {
-        // let ix: number = 0; ix < 10; ++ix
         let row = "";
-        for (let ix = 0; ix < 10; ++ix) {
-            if (x === `${ix}` && y === alpha[iy])
-                row += '🟩';
-            else
-                row += ' ';
+        const alphaY = alpha[iy];
+        // get position of the row
+        const slots = positions.filter(p => p.includes(alphaY));
+        // Let see if there is any item on the row
+        if (slots) {
+            for (let ix = 0; ix < 10; ++ix) {
+                // The read slot if occupied
+                if (slots.find(e => e.includes(`${ix}`)))
+                    row += '🟩';
+                else
+                    row += ' ';
+            }
+            console.log(row);
         }
-        console.log(row);
+        else
+            console.log("          ");
     }
-    position = `${y}:${x}`;
-    console.warn(position);
+    //position = `${y}:${x}`
+    console.warn("⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛");
 }
 //# sourceMappingURL=index.js.map
