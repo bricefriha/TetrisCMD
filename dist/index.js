@@ -1,19 +1,12 @@
 const alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-let position = "A:1";
+let position = "A:0";
 // Draw the board
 //
-placePiece();
-// // Draw the row slots
-// let emptyRow: string = "";
-// for (let i: number = 0; i < 16; ++i)
-//     emptyRow += ' ';
-// // Draw the rows
-// for (let i: number= 0; i < 10; ++i)
-//     console.log(emptyRow);
 // Refresh
 setInterval(() => placePiece(true), 1000);
 function placePiece(isRefreshing = false) {
     console.clear();
+    console.log('\u001Bc\u001B[3J');
     const pos = position.split(':');
     if (isRefreshing)
         //pos[1] = `${Number(pos[1]) + 1}`;
