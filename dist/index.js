@@ -1,28 +1,34 @@
 const alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-let positions = ["A:0"];
+let positions = ["A:0", "A:1"];
+let groundLvl = 16;
 // Draw the board
 //
 // Refresh
-setInterval(() => placePiece(true), 1000);
-function placePiece(isRefreshing = false) {
+setInterval(() => renderBoard(true), 2000);
+/**
+ * Render the board
+ * @param isRefreshing render the board on refresh
+ */
+function renderBoard(isRefreshing = false) {
     console.clear();
     console.log('\u001Bc\u001B[3J');
     if (isRefreshing)
-        for (let posX = 0; posX < positions.length; ++posX) {
+        for (let posX = 0; posX < positions.length; posX++) {
             const position = positions[posX];
             const pos = position.split(':');
-            pos[0] = alpha[alpha.indexOf(pos[0]) + 1];
-            positions[posX] = `${pos[0]}:${pos[1]}`;
+            if (alpha.indexOf(pos[0]) <= groundLvl) {
+                positions.splice(posX, 1, `${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`);
+            }
         }
     // Draw the rows
-    for (let iy = 0; iy < 16; ++iy) {
+    for (let iy = 0; iy < 17; iy++) {
         let row = "";
         const alphaY = alpha[iy];
         // get position of the row
         const slots = positions.filter(p => p.includes(alphaY));
         // Let see if there is any item on the row
-        if (slots) {
-            for (let ix = 0; ix < 10; ++ix) {
+        if ((slots === null || slots === void 0 ? void 0 : slots.length) > 0) {
+            for (let ix = 0; ix < 10; ix++) {
                 // The read slot if occupied
                 if (slots.find(e => e.includes(`${ix}`)))
                     row += '🟩';
@@ -30,11 +36,21 @@ function placePiece(isRefreshing = false) {
                     row += ' ';
             }
             console.log(row);
+            // Check if a piece hit the floor
+            if (iy === groundLvl) {
+                AddNewPieces(["A:0", "A:1"]);
+                --groundLvl;
+            }
         }
         else
             console.log("          ");
     }
-    //position = `${y}:${x}`
     console.warn("⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛");
+    console.log(positions);
+}
+function AddNewPieces(newPieces) {
+    console.log(newPieces);
+    for (let index = 0; index < newPieces.length; index++)
+        positions.push(newPieces[index]);
 }
 //# sourceMappingURL=index.js.map
