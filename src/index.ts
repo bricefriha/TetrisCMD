@@ -13,20 +13,17 @@ for (let i = 0; i <= 10; i++) {
     positions.push(createPiece(`P:${i}`, true));
 }
 let groundLvl: number = 16;
-// Draw the board
-//
-
 
 // Refresh
 setInterval(() => renderBoard(true), 500);
+
 /**
  * Render the board 
  * @param isRefreshing render the board on refresh
  */
 function renderBoard(isRefreshing : boolean = false) {
-    console.clear();
-    console.log('\u001Bc\u001B[3J');
-
+    let board: string = "";
+    board += `\u001Bc\u001B[3J \n`
     if (isRefreshing)
         for (let posX = 0; posX < positions.length; posX++) {
             if (!positions[posX].frozen) {
@@ -57,7 +54,8 @@ function renderBoard(isRefreshing : boolean = false) {
             }
 
             // Draw the row
-            console.log(row);
+            //console.log(row);
+            board += `${row} \n`
             
             // list the pieces bellow
             const bellowPieces: Piece[] = [];
@@ -83,8 +81,12 @@ function renderBoard(isRefreshing : boolean = false) {
             }
         }
         else
-            console.log("          ");
+            board += `          \n`
+            //console.log("          ");
     }
+    console.clear();
+    console.log('\u001Bc\u001B[3J');
+    console.log(board);
 }
 
 function AddNewPieces(newPieces: string[]) {

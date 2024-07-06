@@ -14,8 +14,8 @@ setInterval(() => renderBoard(true), 500);
  * @param isRefreshing render the board on refresh
  */
 function renderBoard(isRefreshing = false) {
-    console.clear();
-    console.log('\u001Bc\u001B[3J');
+    let board = "";
+    board += `\u001Bc\u001B[3J \n`;
     if (isRefreshing)
         for (let posX = 0; posX < positions.length; posX++) {
             if (!positions[posX].frozen) {
@@ -43,7 +43,8 @@ function renderBoard(isRefreshing = false) {
                     row += '  ';
             }
             // Draw the row
-            console.log(row);
+            //console.log(row);
+            board += `${row} \n`;
             // list the pieces bellow
             const bellowPieces = [];
             positions.forEach(p => {
@@ -67,8 +68,12 @@ function renderBoard(isRefreshing = false) {
             }
         }
         else
-            console.log("          ");
+            board += `          \n`;
+        //console.log("          ");
     }
+    console.clear();
+    console.log('\u001Bc\u001B[3J');
+    console.log(board);
 }
 function AddNewPieces(newPieces) {
     for (let index = 0; index < newPieces.length; index++)
