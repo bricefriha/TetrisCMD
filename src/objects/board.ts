@@ -4,19 +4,19 @@ const alpha: string[] = ["$","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "
 
 let positions: Piece[] = [];
 let tetrominos: Tetromino[] = [];
-let groundLvl: number = 16;
-const wallSymbol: string = "🔳";
+let groundLvl: number = 22;
+const wallSymbol: string = "⬜";
 
 export default class Board {
     constructor() {
         
         // add ground and roof
         for (let i = -1; i <= 11; i++) {
-            positions.push(pieceTool.createPiece(`Q:${i}`, wallSymbol, true));
+            positions.push(pieceTool.createPiece(`${alpha[groundLvl]}:${i}`, wallSymbol, true));
             positions.push(pieceTool.createPiece(`$:${i}`, wallSymbol, true));
         }
         // Add walls
-        for (let i = 1; i <= 17; i++) {
+        for (let i = 1; i <= groundLvl; i++) {
             positions.push(pieceTool.createPiece(`${alpha[i]}:-1`, wallSymbol, true));
             positions.push(pieceTool.createPiece(`${alpha[i]}:11`, wallSymbol, true));
         } 
@@ -46,14 +46,12 @@ export default class Board {
                 if (!positions[posX].frozen) {
                     const position = positions[posX].coordinate;
                     const pos = position.split(':');
-                    if (alpha.indexOf(pos[0]) <= groundLvl) {
                         positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`, positions[posX].symbol));
-                    }
                 }
             }
         
         // Draw the rows
-        for (let iy: number = 0; iy <= 17; iy++) {
+        for (let iy: number = 0; iy <= groundLvl; iy++) {
             let row: string = "";
             const alphaY = alpha[iy];
             // get position of the row
@@ -62,8 +60,6 @@ export default class Board {
             // Let see if there is any item on the row
             for (let ix: number = -1; ix <= 11; ix++){
                 const slot = slots.find(e => e.coordinate.split(':')[1] === `${ix}`);
-                // if (ix === 1 && slot.symbol === '⬛')
-                //     console.log(slot)
                 // The read slot if occupied
                 if (slot)
                     row += slot.symbol;
@@ -93,7 +89,6 @@ export default class Board {
                 positions.forEach(p => p.frozen = true);
 
                 this.addTetromino(pieceTool.createTetromino(TetrominoTypes.skew));
-                --groundLvl;
             }
             
         }
