@@ -1,21 +1,18 @@
 
-const alpha : string[] =  ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+import pieceTool, {Piece} from './utils/pieceTool';
+const alpha: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
-interface Piece {
-    coordinate: string,
-    symbol: string,
-    frozen: boolean
-}
-let positions: Piece[] = [createPiece("A:0"), createPiece("A:1")];
+
+let positions: Piece[] = [pieceTool.createPiece("A:0"), pieceTool.createPiece("A:1")];
 
 // add ground
 for (let i = 0; i <= 10; i++) {
-    positions.push(createPiece(`P:${i}`, true));
+    positions.push(pieceTool.createPiece(`P:${i}`, true));
 }
 let groundLvl: number = 16;
 
 // Refresh
-setInterval(() => renderBoard(true), 500);
+setInterval(() => renderBoard(true), 300);
 
 /**
  * Render the board 
@@ -30,7 +27,7 @@ function renderBoard(isRefreshing : boolean = false) {
                 const position = positions[posX].coordinate;
                 const pos = position.split(':');
                 if (alpha.indexOf(pos[0]) <= groundLvl) {
-                    positions.splice(posX, 1, createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`));
+                    positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`));
                 }
             }
         }
@@ -91,20 +88,6 @@ function renderBoard(isRefreshing : boolean = false) {
 
 function AddNewPieces(newPieces: string[]) {
     for (let index = 0; index < newPieces.length; index++)
-        positions.push(createPiece(newPieces[index]));
+        positions.push(pieceTool.createPiece(newPieces[index]));
 }
 
-function createPiece(coord: string, isProp : boolean = false): Piece{
-    if (isProp)
-        return {
-            coordinate: coord,
-            symbol: '⬛',
-            frozen: true
-        };
-    
-    return {
-        coordinate: coord,
-        symbol: '🟩',
-        frozen: false
-    };
-}
