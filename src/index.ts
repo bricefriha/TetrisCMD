@@ -3,11 +3,11 @@ import pieceTool, {Piece} from './utils/pieceTool';
 const alpha: string[] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 
-let positions: Piece[] = [pieceTool.createPiece("A:0"), pieceTool.createPiece("A:1")];
+let positions: Piece[] = [pieceTool.createPiece("A:0", '🟩'), pieceTool.createPiece("A:1", '🟩')];
 
 // add ground
 for (let i = 0; i <= 10; i++) {
-    positions.push(pieceTool.createPiece(`P:${i}`, true));
+    positions.push(pieceTool.createPiece(`P:${i}`, '⬜', true));
 }
 let groundLvl: number = 16;
 
@@ -27,7 +27,7 @@ function renderBoard(isRefreshing : boolean = false) {
                 const position = positions[posX].coordinate;
                 const pos = position.split(':');
                 if (alpha.indexOf(pos[0]) <= groundLvl) {
-                    positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`));
+                    positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`, '🟩'));
                 }
             }
         }
@@ -51,7 +51,6 @@ function renderBoard(isRefreshing : boolean = false) {
             }
 
             // Draw the row
-            //console.log(row);
             board += `${row} \n`
             
             // list the pieces bellow
@@ -63,8 +62,6 @@ function renderBoard(isRefreshing : boolean = false) {
                     const c = positions.find(ps => ps.coordinate ===`${alpha[alpha.indexOf(y) + 1]}:${p.coordinate.split(':')[1]}`)
                     if (c)
                         bellowPieces.push(c);
-                //     const y = p.coordinate.split(':')[0]
-                //     bellowPieces.push(createPiece(`${alpha[alpha.indexOf(y) + 1]}:${p.coordinate.split(':')[1]}`));
                 }
             });
             const collisions = bellowPieces.filter(bp => bp.frozen);
@@ -72,22 +69,20 @@ function renderBoard(isRefreshing : boolean = false) {
             // Check if a piece hit the floor
             if (collided) {
                 positions.forEach(p => p.frozen = true);
-                //console.log(positions);
+                
                 AddNewPieces(["A:1", "A:2", "A:3", "B:3"]);
                 --groundLvl;
             }
         }
         else
             board += `          \n`
-            //console.log("          ");
     }
     console.clear();
-    console.log('\u001Bc\u001B[3J');
     console.log(board);
 }
 
 function AddNewPieces(newPieces: string[]) {
     for (let index = 0; index < newPieces.length; index++)
-        positions.push(pieceTool.createPiece(newPieces[index]));
+        positions.push(pieceTool.createPiece(newPieces[index], '🟩'));
 }
 

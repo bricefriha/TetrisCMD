@@ -1,14 +1,18 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const pieceTool_1 = __importDefault(require("./utils/pieceTool"));
 const alpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-let positions = [createPiece("A:0"), createPiece("A:1")];
+let positions = [pieceTool_1.default.createPiece("A:0", '🟩'), pieceTool_1.default.createPiece("A:1", '🟩')];
 // add ground
 for (let i = 0; i <= 10; i++) {
-    positions.push(createPiece(`P:${i}`, true));
+    positions.push(pieceTool_1.default.createPiece(`P:${i}`, '⬜', true));
 }
 let groundLvl = 16;
-// Draw the board
-//
 // Refresh
-setInterval(() => renderBoard(true), 500);
+setInterval(() => renderBoard(true), 300);
 /**
  * Render the board
  * @param isRefreshing render the board on refresh
@@ -22,7 +26,7 @@ function renderBoard(isRefreshing = false) {
                 const position = positions[posX].coordinate;
                 const pos = position.split(':');
                 if (alpha.indexOf(pos[0]) <= groundLvl) {
-                    positions.splice(posX, 1, createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`));
+                    positions.splice(posX, 1, pieceTool_1.default.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`, '🟩'));
                 }
             }
         }
@@ -43,7 +47,6 @@ function renderBoard(isRefreshing = false) {
                     row += '  ';
             }
             // Draw the row
-            //console.log(row);
             board += `${row} \n`;
             // list the pieces bellow
             const bellowPieces = [];
@@ -53,8 +56,6 @@ function renderBoard(isRefreshing = false) {
                     const c = positions.find(ps => ps.coordinate === `${alpha[alpha.indexOf(y) + 1]}:${p.coordinate.split(':')[1]}`);
                     if (c)
                         bellowPieces.push(c);
-                    //     const y = p.coordinate.split(':')[0]
-                    //     bellowPieces.push(createPiece(`${alpha[alpha.indexOf(y) + 1]}:${p.coordinate.split(':')[1]}`));
                 }
             });
             const collisions = bellowPieces.filter(bp => bp.frozen);
@@ -62,34 +63,18 @@ function renderBoard(isRefreshing = false) {
             // Check if a piece hit the floor
             if (collided) {
                 positions.forEach(p => p.frozen = true);
-                //console.log(positions);
                 AddNewPieces(["A:1", "A:2", "A:3", "B:3"]);
                 --groundLvl;
             }
         }
         else
             board += `          \n`;
-        //console.log("          ");
     }
     console.clear();
-    console.log('\u001Bc\u001B[3J');
     console.log(board);
 }
 function AddNewPieces(newPieces) {
     for (let index = 0; index < newPieces.length; index++)
-        positions.push(createPiece(newPieces[index]));
-}
-function createPiece(coord, isProp = false) {
-    if (isProp)
-        return {
-            coordinate: coord,
-            symbol: '⬛',
-            frozen: true
-        };
-    return {
-        coordinate: coord,
-        symbol: '🟩',
-        frozen: false
-    };
+        positions.push(pieceTool_1.default.createPiece(newPieces[index], '🟩'));
 }
 //# sourceMappingURL=index.js.map
