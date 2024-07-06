@@ -1,4 +1,5 @@
-import pieceTool, {Piece, Tetromino, TetrominoTypes} from '../utils/pieceTool';
+import pieceTool, { Piece, Tetromino, TetrominoTypes } from '../utils/pieceTool';
+import process from 'node:process';
 const alpha: string[] = ["$","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 
@@ -39,7 +40,6 @@ export default class Board {
     */
     renderBoard(isRefreshing : boolean = true) {
         let body: string = "";
-        body += `\u001Bc\u001B[3J \n`
         if (isRefreshing)
             // Move all the pieces that are not frozen
             for (let posX = 0; posX < positions.length; posX++) {
@@ -92,7 +92,8 @@ export default class Board {
             }
             
         }
-        console.clear();
-        console.log(body);
+        //console.clear();
+        process.stdout.write("\u001Bc\u001B[3J \n");
+        process.stdout.write(body);
     }
 }
