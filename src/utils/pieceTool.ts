@@ -78,6 +78,16 @@ export default abstract class pieceTool {
                 break;
         } 
     }
+    /**
+     * Generate a random Tetromino
+     */
+    public static createRandomTetromino() :  Tetromino {
+        // Get a random tetromino type
+        const tetrominoType: TetrominoTypes = TetrominoTypes[TetrominoTypes[Math.floor(Math.random() * 5) + 1]];
+        
+        // Create the tetromino using this type
+        return this.createTetromino(tetrominoType);
+    }
 }
 export interface Piece {
     coordinate: string,
@@ -92,6 +102,5 @@ export enum TetrominoTypes {
     square,
     T,
     L,
-    skew,
-    none
+    skew
 }

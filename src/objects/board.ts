@@ -22,8 +22,7 @@ export default class Board {
             positions.push(pieceTool.createPiece(`${alpha[i]}:11`, wallSymbol, true));
         } 
         // First piece
-        this.addTetromino(pieceTool.createTetromino(TetrominoTypes.straight));
-        //console.log(positions.filter(p => p.coordinate.includes("A")));
+        this.addTetromino(pieceTool.createRandomTetromino());
     }
     /**
      * 
@@ -88,7 +87,7 @@ export default class Board {
             if (collided) {
                 positions.forEach(p => p.frozen = true);
 
-                this.addTetromino(pieceTool.createTetromino(TetrominoTypes.skew));
+                this.addTetromino(pieceTool.createRandomTetromino());
             }
             
         }
