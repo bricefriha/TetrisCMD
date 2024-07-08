@@ -30,6 +30,8 @@ export default class Board {
      * @param tetromino Tetromino to be added
      */
     addTetromino(tetromino: Tetromino) {
+        if (!tetromino?.coordinates)
+            return;
         tetrominos.push(tetromino);
         tetromino.coordinates.forEach(c => positions.push(c));
     }

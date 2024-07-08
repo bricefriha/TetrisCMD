@@ -75,7 +75,14 @@ export default abstract class pieceTool {
                 };
         
             default:
-                break;
+                return {
+                    coordinates: [
+                        this.createPiece("A:0", '🟦'),
+                        this.createPiece("A:1", '🟦'),
+                        this.createPiece("A:2", '🟦'),
+                        this.createPiece("A:3", '🟦')
+                    ]
+                };;
         } 
     }
     /**
