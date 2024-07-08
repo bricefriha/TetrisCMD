@@ -3,23 +3,38 @@ import process from 'node:process';
 const alpha: string[] = ["$","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 
-let positions: Piece[] = [];
-let tetrominos: Tetromino[] = [];
-let groundLvl: number = 22;
-const wallSymbol: string = "⬜";
+
 
 export default class Board {
+    private groundLvl: number = 22;
+    private wallSymbol: string = "🔳";
+    private _positions : Piece[]= [];
+    public get positions() : Piece[] {
+        return this._positions;
+    }
+    public set positions(v : Piece[]) {
+        this._positions = v;
+    }
+    
+    private _tetrominos : Tetromino[] = [];
+    public get tetrominos() : Tetromino[] {
+        return this._tetrominos;
+    }
+    public set value(v : Tetromino[]) {
+        this._tetrominos = v;
+    }
+    
+    
     constructor() {
-        
         // add ground and roof
         for (let i = -1; i <= 11; i++) {
-            positions.push(pieceTool.createPiece(`${alpha[groundLvl]}:${i}`, wallSymbol, true));
-            positions.push(pieceTool.createPiece(`$:${i}`, wallSymbol, true));
+            this.positions.push(pieceTool.createPiece(`${alpha[this.groundLvl]}:${i}`, this.wallSymbol, true));
+            this.positions.push(pieceTool.createPiece(`$:${i}`, this.wallSymbol, true));
         }
         // Add walls
-        for (let i = 1; i <= groundLvl; i++) {
-            positions.push(pieceTool.createPiece(`${alpha[i]}:-1`, wallSymbol, true));
-            positions.push(pieceTool.createPiece(`${alpha[i]}:11`, wallSymbol, true));
+        for (let i = 1; i <= this.groundLvl; i++) {
+            this.positions.push(pieceTool.createPiece(`${alpha[i]}:-1`, this.wallSymbol, true));
+            this.positions.push(pieceTool.createPiece(`${alpha[i]}:11`, this.wallSymbol, true));
         } 
         // First piece
         this.addTetromino(pieceTool.createRandomTetromino());
@@ -32,8 +47,8 @@ export default class Board {
     addTetromino(tetromino: Tetromino) {
         if (!tetromino?.coordinates)
             return;
-        tetrominos.push(tetromino);
-        tetromino.coordinates.forEach(c => positions.push(c));
+        this.tetrominos.push(tetromino);
+        tetromino.coordinates.forEach(c => this.positions.push(c));
     }
     /**
     * Render the board 
@@ -43,20 +58,20 @@ export default class Board {
         let body: string = "";
         if (isRefreshing)
             // Move all the pieces that are not frozen
-            for (let posX = 0; posX < positions.length; posX++) {
-                if (!positions[posX].frozen) {
-                    const position = positions[posX].coordinate;
+            for (let posX = 0; posX < this.positions.length; posX++) {
+                if (!this.positions[posX].frozen) {
+                    const position = this.positions[posX].coordinate;
                     const pos = position.split(':');
-                        positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`, positions[posX].symbol));
+                        this.positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`, this.positions[posX].symbol));
                 }
             }
         
         // Draw the rows
-        for (let iy: number = 0; iy <= groundLvl; iy++) {
+        for (let iy: number = 0; iy <= this.groundLvl; iy++) {
             let row: string = "";
             const alphaY = alpha[iy];
             // get position of the row
-            const slots = positions.filter(p => p.coordinate.includes(alphaY));
+            const slots = this.positions.filter(p => p.coordinate.includes(alphaY));
 
             // Let see if there is any item on the row
             for (let ix: number = -1; ix <= 11; ix++){
@@ -75,10 +90,10 @@ export default class Board {
             // list the pieces bellow
             const bellowPieces: Piece[] = [];
 
-            positions.forEach(p => {
+            this.positions.forEach(p => {
                 const y = p.coordinate.split(':')[0]
                 if (!p.frozen) {
-                    const c = positions.find(ps => ps.coordinate ===`${alpha[alpha.indexOf(y) + 1]}:${p.coordinate.split(':')[1]}`)
+                    const c = this.positions.find(ps => ps.coordinate ===`${alpha[alpha.indexOf(y) + 1]}:${p.coordinate.split(':')[1]}`)
                     if (c)
                         bellowPieces.push(c);
                 }
@@ -87,14 +102,14 @@ export default class Board {
             const collided = collisions.length >0;
             // Check if a piece hit the floor
             if (collided) {
-                positions.forEach(p => p.frozen = true);
+                this.positions.forEach(p => p.frozen = true);
 
                 this.addTetromino(pieceTool.createRandomTetromino());
             }
             
         }
         //console.clear();
-        process.stdout.write("\u001Bc\u001B[3J \n");
+        process.stdout.write("\u001Bc\u001B[3J");
         process.stdout.write(body);
     }
 }
