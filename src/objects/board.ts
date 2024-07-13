@@ -1,5 +1,7 @@
-import pieceTool, { Piece, Tetromino, TetrominoTypes } from '../utils/pieceTool';
+import pieceTool, { Piece } from '../utils/pieceTool';
 import process from 'node:process';
+import readline from 'readline';
+import Tetromino from './Tetromino';
 const alpha: string[] = ["$","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 
@@ -20,10 +22,9 @@ export default class Board {
     public get tetrominos() : Tetromino[] {
         return this._tetrominos;
     }
-    public set value(v : Tetromino[]) {
+    public set tetrominos(v : Tetromino[]) {
         this._tetrominos = v;
     }
-    
     
     constructor() {
         // add ground and roof
@@ -38,6 +39,26 @@ export default class Board {
         } 
         // First piece
         this.addTetromino(pieceTool.createRandomTetromino());
+
+        readline.emitKeypressEvents(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.on("keypress", (char, evt) => {
+          if (char === "q") process.exit();
+
+            // move left right
+            for (let posX = 0; posX < this.positions.length; posX++) {
+                if (!this.positions[posX].frozen) {
+                    const position = this.positions[posX].coordinate;
+                    const pos = position.split(':');
+                    let x = Number(pos[1]);
+                    if (evt.name === "right" && this.positions[x+1]?.symbol !== this.wallSymbol)
+                        ++x;
+                    if (evt.name === "left" && this.positions[x-1]?.symbol !== this.wallSymbol)
+                        --x;
+                    this.positions.splice(posX, 1, pieceTool.createPiece(`${pos[0]}:${x}`, this.positions[posX].symbol));
+                }
+            }
+        });
     }
     /**
      * 
@@ -56,7 +77,7 @@ export default class Board {
     */
     renderBoard(isRefreshing : boolean = true) {
         let body: string = "";
-        if (isRefreshing)
+        if (isRefreshing) {
             // Move all the pieces that are not frozen
             for (let posX = 0; posX < this.positions.length; posX++) {
                 if (!this.positions[posX].frozen) {
@@ -65,6 +86,8 @@ export default class Board {
                         this.positions.splice(posX, 1, pieceTool.createPiece(`${alpha[alpha.indexOf(pos[0]) + 1]}:${pos[1]}`, this.positions[posX].symbol));
                 }
             }
+            
+        }
         
         // Draw the rows
         for (let iy: number = 0; iy <= this.groundLvl; iy++) {

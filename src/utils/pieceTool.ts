@@ -1,3 +1,4 @@
+import Tetromino from "../objects/Tetromino";
 
 export default abstract class pieceTool {
     /**
@@ -29,60 +30,48 @@ export default abstract class pieceTool {
     public static createTetromino(type : TetrominoTypes) :  Tetromino{
         switch (type) {
             case TetrominoTypes.straight:
-                return {
-                    coordinates: [
+                return new Tetromino ([
                         this.createPiece("A:0", '🟦'),
                         this.createPiece("A:1", '🟦'),
                         this.createPiece("A:2", '🟦'),
                         this.createPiece("A:3", '🟦')
-                    ]
-                };
+                    ]);
             case TetrominoTypes.square:
-                return {
-                    coordinates: [
+                return new Tetromino([
                         this.createPiece("A:0", '🟨'),
                         this.createPiece("A:1", '🟨'),
                         this.createPiece("B:0", '🟨'),
                         this.createPiece("B:1", '🟨')
-                    ]
-                };
+                    ]);
             case TetrominoTypes.T:
-                return {
-                    coordinates: [
+                return new Tetromino([
                         this.createPiece("A:0", '🟪'),
                         this.createPiece("A:1", '🟪'),
                         this.createPiece("A:2", '🟪'),
                         this.createPiece("B:1", '🟪')
-                    ]
-                };
+                    ]);
             case TetrominoTypes.L:
-                return {
-                    coordinates: [
+                return new Tetromino([
                         this.createPiece("A:0", '🟧'),
                         this.createPiece("B:0", '🟧'),
                         this.createPiece("C:0", '🟧'),
                         this.createPiece("C:1", '🟧')
-                    ]
-                };
+                    ]);
             case TetrominoTypes.skew:
-                return {
-                    coordinates: [
+                return new Tetromino([
                         this.createPiece("B:0", '🟩'),
                         this.createPiece("B:1", '🟩'),
                         this.createPiece("A:1", '🟩'),
                         this.createPiece("A:2", '🟩')
-                    ]
-                };
+                    ]);
         
             default:
-                return {
-                    coordinates: [
+                return new Tetromino([
                         this.createPiece("A:0", '🟦'),
                         this.createPiece("A:1", '🟦'),
                         this.createPiece("A:2", '🟦'),
                         this.createPiece("A:3", '🟦')
-                    ]
-                };;
+                    ]);
         } 
     }
     /**
@@ -101,9 +90,9 @@ export interface Piece {
     symbol: string,
     frozen: boolean
 }
-export interface Tetromino {
-    coordinates: Piece[]
-}
+// export interface Tetromino {
+//     coordinates: Piece[]
+// }
 export enum TetrominoTypes {
     straight,
     square,
