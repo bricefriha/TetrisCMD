@@ -43,20 +43,40 @@ export default class Board {
         readline.emitKeypressEvents(process.stdin);
         process.stdin.setRawMode(true);
         process.stdin.on("keypress", (char, evt) => {
-          if (char === "q") process.exit();
+            if (char === "q") process.exit();
+            
+            //get all side pieces
+            const sidePieces : Piece[] = [];
+            this.positions.forEach(p => {
+                try {
+                    if (!p)
+                        return;
+                    const x = Number(p.coordinate.split(':')[1]);
 
-            // move left right
-            for (let posX = 0; posX < this.positions.length; posX++) {
-                if (!this.positions[posX].frozen) {
-                    const position = this.positions[posX].coordinate;
-                    const pos = position.split(':');
-                    let x = Number(pos[1]);
-                    if (evt.name === "right" && this.positions[x+1]?.symbol !== this.wallSymbol)
-                        ++x;
-                    if (evt.name === "left" && this.positions[x-1]?.symbol !== this.wallSymbol)
-                        --x;
-                    this.positions.splice(posX, 1, pieceTool.createPiece(`${pos[0]}:${x}`, this.positions[posX].symbol));
+                    if (!p.frozen) {
+                        const targetCoord: string = evt.name === "right" ? `${p.coordinate.split(':')[0]}:${[x + 1]}` : `${p.coordinate.split(':')[0]}:${[x - 1]}`;
+                        const c = this.positions.find(ps => ps.coordinate === targetCoord);
+                        if (c.frozen)
+                            sidePieces.push(c);
+                    }
+                    
+                } catch (error) {}
+            });
+            if (sidePieces.length === 0) {
+                // move left right
+                for (let posX = 0; posX < this.positions.length; posX++) {
+                    if (!this.positions[posX].frozen) {
+                        const position = this.positions[posX].coordinate;
+                        const pos = position.split(':');
+                        let x = Number(pos[1]);
+                        if (evt.name === "right")
+                            ++x;
+                        if (evt.name === "left")
+                            --x;
+                        this.positions.splice(posX, 1, pieceTool.createPiece(`${pos[0]}:${x}`, this.positions[posX].symbol));
+                    }
                 }
+
             }
         });
     }
